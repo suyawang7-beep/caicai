@@ -1,0 +1,4 @@
+:root { font-family: Inter, system-ui, sans-serif; color: #20242d; background: #eef1f5; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+.loading { display: grid; min-height: 100vh; place-items: center; }
