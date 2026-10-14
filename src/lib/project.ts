@@ -15,3 +15,15 @@ export const addAssetElement = (page: Page, assetId: string): Page => {
 };
 
 export const removeElement = (page: Page, elementId: string): Page => ({ ...page, elements: page.elements.filter((element) => element.id !== elementId) });
+
+export const updateElementTransform = (page: Page, elementId: string, patch: Partial<Pick<CanvasElement, 'x' | 'y' | 'scale' | 'rotation'>>): Page => ({
+  ...page, elements: page.elements.map((element) => element.id === elementId && !element.locked ? { ...element, ...patch } : element),
+});
+export const toggleElementVisible = (page: Page, elementId: string): Page => ({ ...page, elements: page.elements.map((element) => element.id === elementId ? { ...element, visible: !element.visible } : element) });
+export const toggleElementLocked = (page: Page, elementId: string): Page => ({ ...page, elements: page.elements.map((element) => element.id === elementId ? { ...element, locked: !element.locked } : element) });
+export const reorderElements = (page: Page, activeId: string, overId: string): Page => {
+  const from = page.elements.findIndex((element) => element.id === activeId); const to = page.elements.findIndex((element) => element.id === overId);
+  if (from < 0 || to < 0) return page;
+  const elements = [...page.elements]; const [active] = elements.splice(from, 1); elements.splice(to, 0, active);
+  return { ...page, elements };
+};

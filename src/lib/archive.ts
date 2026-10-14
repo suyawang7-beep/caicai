@@ -1,0 +1,5 @@
+import JSZip from 'jszip';
+import type { Project } from '../types/project';
+
+export const exportProject = async (project: Project, blobs: Map<string, Blob>) => { const zip = new JSZip(); zip.file('project.json', JSON.stringify(project)); for (const [id, blob] of blobs) zip.file(`assets/${id}`, blob); return zip.generateAsync({ type: 'blob' }); };
+export const importProject = async (file: Blob): Promise<{ project: Project; blobs: Map<string, Blob> }> => { let zip: JSZip; try { zip = await JSZip.loadAsync(file); } catch { throw new Error('无效的项目文件。'); } const entry = zip.file('project.json'); if (!entry) throw new Error('无效的项目文件。'); let project: Project; try { project = JSON.parse(await entry.async('text')); } catch { throw new Error('无效的项目数据。'); } if (!Array.isArray(project.pages) || !Array.isArray(project.assets)) throw new Error('无效的项目数据。'); const blobs = new Map<string, Blob>(); for (const asset of project.assets) { const assetFile = zip.file(`assets/${asset.id}`); if (!assetFile) throw new Error('项目缺少图片素材。'); blobs.set(asset.id, await assetFile.async('blob')); } return { project: { ...project, id: crypto.randomUUID(), updatedAt: Date.now() }, blobs }; };

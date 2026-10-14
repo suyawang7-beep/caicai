@@ -1,3 +1,25 @@
+import { useEffect, useMemo, useState } from 'react';
+import { AssetLibrary } from './components/AssetLibrary';
+import { Canvas } from './components/Canvas';
+import { LayersPanel } from './components/LayersPanel';
+import { PageSidebar } from './components/PageSidebar';
+import { EditorHeader } from './components/EditorHeader';
+import { PreviewModal } from './components/PreviewModal';
+import { useProject } from './hooks/useProject';
+import { exportProject, importProject } from './lib/archive';
+import { addAssetElement, createPage, removeElement, reorderElements, toggleElementLocked, toggleElementVisible, updateElementTransform } from './lib/project';
+import { loadAssetBlob, saveAssetBlob } from './lib/storage';
+import type { Asset, CanvasElement, Page, Project } from './types/project';
+
+const changePage = (project: Project, pageId: string, change: (page: Page) => Page): Project => ({ ...project, pages: project.pages.map((page) => page.id === pageId ? change(page) : page) });
 export default function App() {
-  return <main className="loading">正在载入排版编辑器…</main>;
+  const { project, update, error, undo, redo, canUndo, canRedo, replaceProject } = useProject(); const [selectedId, setSelectedId] = useState<string | null>(null); const [urls, setUrls] = useState<Record<string, string>>({}); const [preview, setPreview] = useState(false);
+  useEffect(() => { if (!project) return; let active = true; Promise.all(project.assets.map(async (asset) => [asset.id, await loadAssetBlob(asset.id)] as const)).then((items) => { if (active) setUrls(Object.fromEntries(items.filter((item): item is [string, Blob] => Boolean(item[1])).map(([id, blob]) => [id, URL.createObjectURL(blob)]))); }); return () => { active = false; }; }, [project?.assets]);
+  const page = useMemo(() => project?.pages.find((item) => item.id === project.activePageId), [project]);
+  if (!project || !page) return <main className="loading">正在载入排版编辑器…</main>;
+  const updateCurrent = (change: (page: Page) => Page) => update((current) => changePage(current, page.id, change));
+  const upload = async (files: File[]) => { for (const file of files) { if (!file.type.startsWith('image/')) continue; const url = URL.createObjectURL(file); const image = new Image(); await new Promise<void>((resolve, reject) => { image.onload = () => resolve(); image.onerror = () => reject(new Error('图片无法读取')); image.src = url; }); URL.revokeObjectURL(url); const asset: Asset = { id: crypto.randomUUID(), name: file.name, type: file.type, width: image.naturalWidth, height: image.naturalHeight }; await saveAssetBlob(asset.id, file); update((current) => ({ ...current, assets: [...current.assets, asset] })); } };
+  const download = async () => { const blobs = new Map<string, Blob>(); for (const asset of project.assets) { const blob = await loadAssetBlob(asset.id); if (blob) blobs.set(asset.id, blob); } const blob = await exportProject(project, blobs); const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = `${project.name}.zip`; link.click(); URL.revokeObjectURL(url); };
+  const restore = async (file: File) => { try { const imported = await importProject(file); for (const [id, blob] of imported.blobs) await saveAssetBlob(id, blob); replaceProject(imported.project); } catch (cause) { alert(cause instanceof Error ? cause.message : '导入失败。'); } };
+  return <div className="editor"><EditorHeader name={project.name} canUndo={canUndo} canRedo={canRedo} onUndo={undo} onRedo={redo} onPreview={() => setPreview(true)} onExport={() => void download()} onImport={(file) => void restore(file)} /><div className="editor-grid"><PageSidebar pages={project.pages} activeId={page.id} onSelect={(id) => { update((current) => ({ ...current, activePageId: id })); setSelectedId(null); }} onCreate={() => update((current) => { const next = createPage('未命名页面'); const name = prompt('页面名称', next.name) || next.name; return { ...current, activePageId: next.id, pages: [...current.pages, { ...next, name }] }; })} onRename={(id, name) => update((current) => changePage(current, id, (item) => ({ ...item, name })))} onDelete={(id) => update((current) => ({ ...current, pages: current.pages.filter((item) => item.id !== id), activePageId: current.activePageId === id ? current.pages.find((item) => item.id !== id)!.id : current.activePageId }))} /><Canvas page={page} urls={urls} selectedId={selectedId} onSelect={setSelectedId} onTransform={(id, patch) => updateCurrent((item) => updateElementTransform(item, id, patch))} /><AssetLibrary assets={project.assets} urls={urls} onUpload={(files) => void upload(files).catch(() => alert('图片无法读取。'))} onAdd={(assetId) => updateCurrent((item) => addAssetElement(item, assetId))} /><LayersPanel elements={page.elements} assets={project.assets} selectedId={selectedId} onSelect={setSelectedId} onToggleVisible={(id) => updateCurrent((item) => toggleElementVisible(item, id))} onToggleLocked={(id) => updateCurrent((item) => toggleElementLocked(item, id))} onDelete={(id) => { updateCurrent((item) => removeElement(item, id)); setSelectedId(null); }} onReorder={(active, over) => updateCurrent((item) => reorderElements(item, active, over))} /></div>{preview && <PreviewModal page={page} urls={urls} onClose={() => setPreview(false)} />}{error && <div className="error">{error}</div>}</div>;
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addAssetElement, createPage, createProject, removeElement } from './project';
+import { addAssetElement, createPage, createProject, removeElement, reorderElements, toggleElementLocked, toggleElementVisible, updateElementTransform } from './project';
 
 describe('project document mutations', () => {
   it('creates an editable project with one 首页 page', () => {
@@ -20,5 +20,20 @@ describe('project document mutations', () => {
     const page = addAssetElement(createPage('首页'), 'asset-1');
     const updated = removeElement(page, page.elements[0].id);
     expect(updated.elements).toHaveLength(0);
+  });
+
+  it('updates transforms and preserves locked elements', () => {
+    const page = addAssetElement(createPage('首页'), 'asset-1');
+    const moved = updateElementTransform(page, page.elements[0].id, { x: 300, rotation: 15 });
+    expect(moved.elements[0]).toMatchObject({ x: 300, rotation: 15 });
+    const locked = toggleElementLocked(moved, moved.elements[0].id);
+    expect(updateElementTransform(locked, locked.elements[0].id, { x: 20 }).elements[0].x).toBe(300);
+  });
+
+  it('toggles visibility and changes layer order', () => {
+    let page = addAssetElement(createPage('首页'), 'a');
+    page = addAssetElement(page, 'b');
+    expect(toggleElementVisible(page, page.elements[0].id).elements[0].visible).toBe(false);
+    expect(reorderElements(page, page.elements[1].id, page.elements[0].id).elements.map((item) => item.assetId)).toEqual(['b', 'a']);
   });
 });
