@@ -2,6 +2,7 @@ import 'fake-indexeddb/auto';
 import { describe, expect, it } from 'vitest';
 import { exportProject, importProject } from './archive';
 import { createProject } from './project';
+import JSZip from 'jszip';
 
 describe('project archive', () => {
   it('round-trips a project and transparent image blob', async () => {
@@ -13,5 +14,11 @@ describe('project archive', () => {
 
   it('rejects an invalid archive', async () => {
     await expect(importProject(new Blob(['bad']))).rejects.toThrow('无效');
+  });
+
+  it('rejects an archive without a usable active page', async () => {
+    const zip = new JSZip();
+    zip.file('project.json', JSON.stringify({ ...createProject(), pages: [], assets: [] }));
+    await expect(importProject(await zip.generateAsync({ type: 'blob' }))).rejects.toThrow('无效');
   });
 });
