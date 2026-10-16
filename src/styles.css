@@ -126,3 +126,44 @@ button { border: 0; border-radius: 7px; background: #e6eaf0; color: inherit; cur
   .destination-card { transition:none; }
   .destination-card:hover { transform:none; }
 }
+
+
+/* Buzhi Island: layered ocean-fantasy homepage v2. */
+.celebration-app{--surface:#ffffff80;--line:#c6eeffb8;--paper:#ddf3ff;--accent:#327cb0;background:radial-gradient(ellipse at 81% 14%,#f9caff88 0%,transparent 37%),radial-gradient(ellipse at 18% 20%,#b9f7ffbb 0%,transparent 45%),linear-gradient(155deg,#d4f3ff 0%,#a5dbf4 48%,#d3d5ff 100%)}
+.celebration-header{background:#f2fcffb5;backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);box-shadow:0 8px 38px #479bc01e}
+.glass-panel{background:linear-gradient(135deg,#ffffffb0,#f5faff57 55%,#f4d9ff45);border:1px solid #ffffffbd;box-shadow:inset 0 1px 0 #fff,0 15px 45px #528db42e,0 2px 8px #748bbc14;backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4)}
+.celebration-content{width:min(1320px,calc(100% - 48px));padding-top:30px}
+.hero-v2{position:relative;isolation:isolate;display:block;min-height:680px;padding:60px 35px 94px;overflow:hidden;border-radius:42px;background:radial-gradient(ellipse at 70% 30%,#e6c8ff9c,transparent 35%),radial-gradient(ellipse at 70% 75%,#b9faff9c,transparent 41%),linear-gradient(125deg,#caf1ff 0%,#8fd6ee 52%,#bbadf2 100%);border:1px solid #fff9;box-shadow:inset 0 2px 3px #fff,0 25px 60px #378db431}
+.hero-v2::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.6;background:repeating-radial-gradient(ellipse at 80% 120%,transparent 0 47px,#ffffff66 49px 51px,transparent 54px 98px);z-index:-1}
+.hero-v2::after{content:'BUZHI ISLAND';position:absolute;left:4%;bottom:5%;font:900 clamp(60px,13vw,182px)/1 system-ui,sans-serif;letter-spacing:-.07em;color:#fff4;white-space:nowrap;pointer-events:none;z-index:-1}
+.hero-ocean-halo{position:absolute;right:10%;top:7%;width:min(55vw,660px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#ffffffbb 0 10%,#d8e8ff80 48%,#fce1ff00 70%);filter:blur(5px);pointer-events:none}
+.hero-copy{position:relative;z-index:3;width:min(46%,520px);padding:32px 30px 35px;border-radius:28px;margin-top:50px}
+.hero-mini-tag{display:inline-block;border-radius:30px;padding:8px 14px;background:#fff8;border:1px solid #fff;font-weight:700;font-size:13px;color:#477d9e}
+.hero-v2 h1{font-family:'ZCOOL KuaiLe','LXGW WenKai',sans-serif;font-size:clamp(27px,3.45vw,46px);line-height:1.4;letter-spacing:0;color:#2e668e;text-shadow:0 2px 0 #fff9}
+.hero-v2 h1 span{display:block;color:#745eae}
+.hero-v2 .hero-description{font-size:16px;color:#3d6b85}
+.hero-v2 .status-note{font-size:12px}
+.hero-v2 .primary-link{background:linear-gradient(115deg,#60b6e7,#8889da);border:1px solid #f7ffffaa;box-shadow:0 5px 18px #4d95bc52}
+.hero-v2 .secondary-link{background:#ffffff9c;border:1px solid #fff}
+.hero-poster{position:absolute;top:25px;right:4%;width:52%;height:590px;z-index:2;border:1px solid #ffffff80;border-radius:40% 40% 23px 23px/24% 24% 23px 23px;background:radial-gradient(circle at 48% 25%,#fff9,transparent 32%),linear-gradient(155deg,#a1e3ff4d,#d1bfff6e 60%,#ffffff54);box-shadow:0 15px 60px #458dba47,inset 0 0 0 8px #ffffff22;overflow:hidden}
+.poster-aurora{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 45%,#c4faffaa,transparent 45%),radial-gradient(ellipse at 80% 40%,#f6bde7a0,transparent 48%);filter:blur(20px)}
+.poster-overline{position:absolute;top:50px;left:0;right:0;text-align:center;color:#447ca0;font:700 10px system-ui,sans-serif;letter-spacing:3px}
+.poster-characters{position:absolute;inset:95px 22px 85px;display:flex;align-items:stretch;gap:10px}
+.poster-character{flex:1;position:relative;display:flex;align-items:center;justify-content:center;min-width:0;border-radius:48% 48% 15px 15px;background:linear-gradient(180deg,#fff8,#fff1);border:1px dashed #ffffffdc;box-shadow:inset 0 0 35px #ffffffaa}
+.poster-zhizhi{transform:translateY(22px) rotate(-3deg);background:linear-gradient(160deg,#b9ddf9c0,#a3c1ee55)}
+.poster-caicai{transform:translateY(-8px) rotate(3deg);background:linear-gradient(160deg,#ffdaefb8,#c7c7ff70)}
+.character-placeholder{text-align:center;color:#527da0;font-size:27px;font-weight:800;line-height:1.8;text-shadow:0 1px 0 white}
+.character-placeholder small{display:block;font-size:11px;font-weight:500}
+.character-shimmer{position:absolute;top:10%;font-size:46px;color:#fff;opacity:.8}
+.poster-bottom-glass{position:absolute;left:18px;right:18px;bottom:18px;display:flex;flex-direction:column;gap:4px;align-items:center;padding:13px;border:1px solid #fff9;border-radius:15px;background:#ffffff99;backdrop-filter:blur(16px);color:#54718e}
+.poster-bottom-glass span{font-size:10px;letter-spacing:2px}.poster-bottom-glass strong{font-size:18px;color:#496b99}
+.floating-stamp{position:absolute;z-index:4;display:flex;flex-direction:column;align-items:center;gap:5px;border-radius:20px;padding:15px 20px;min-width:145px;transform:rotate(-6deg)}
+.floating-stamp span{font-size:29px}.floating-stamp strong{font-size:15px}.floating-stamp small{font-size:11px}
+.floating-checkin{left:42%;bottom:45px}.floating-letter{right:0;top:48%;transform:rotate(8deg)}
+.hero-floating-spark{position:absolute;z-index:3;color:white;text-shadow:0 0 20px #fff;font-size:35px;pointer-events:none}.spark-one{top:6%;left:25%}.spark-two{top:26%;right:5%}.spark-three{bottom:13%;left:31%}
+.hero-sea-floor{position:absolute;bottom:15px;left:15%;right:10%;display:flex;justify-content:space-around;color:#fff9;font-size:26px;pointer-events:none}
+.home-bulletin{margin-top:36px;border-left:1px solid #fffbd}
+.home-destinations{padding:10px 0 20px}.destination-card.glass-panel{background:linear-gradient(145deg,#ffffffaf,#e5e7ff65);border-color:#fffbd;border-radius:22px;min-height:210px}.destination-card:nth-child(2),.destination-card:nth-child(3),.destination-card:nth-child(4){background:linear-gradient(145deg,#ffffffa8,#caeaff75)}
+@media(max-width:900px){.hero-copy{width:52%}.hero-poster{right:2%;width:47%}.floating-letter{right:1%;top:75%}.floating-checkin{left:50%}}
+@media(max-width:640px){.celebration-content{width:calc(100% - 24px)}.hero-v2{min-height:850px;padding:22px 16px 35px;border-radius:28px}.hero-copy{width:100%;margin:0;padding:22px 19px}.hero-v2 h1{font-size:clamp(26px,7vw,37px)}.hero-v2 .hero-description{font-size:14px}.hero-v2 .hero-actions{margin:18px 0 12px}.hero-poster{top:346px;left:7%;right:7%;width:86%;height:405px;border-radius:38% 38% 20px 20px/23% 23% 20px 20px}.poster-overline{top:32px;font-size:8px}.poster-characters{inset:66px 12px 82px;gap:8px}.character-placeholder{font-size:21px}.character-placeholder small{font-size:9px}.poster-bottom-glass{bottom:10px}.floating-checkin{bottom:26px;left:2%;min-width:118px;padding:10px;transform:rotate(-6deg)}.floating-letter{top:auto;bottom:26px;right:2%;min-width:118px;padding:10px;transform:rotate(5deg)}.floating-stamp span{font-size:20px}.floating-stamp strong{font-size:12px}.floating-stamp small{font-size:9px}.hero-sea-floor{display:none}.spark-one{top:36%;left:4%}.spark-three{bottom:14%;left:47%}}
+@media(prefers-reduced-motion:no-preference){.hero-v2[data-animation='on'] .hero-floating-spark{animation:hero-float 5s ease-in-out infinite alternate}@keyframes hero-float{to{transform:translateY(-12px);opacity:.65}}}
