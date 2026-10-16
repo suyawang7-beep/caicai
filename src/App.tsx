@@ -54,12 +54,34 @@ function AnnouncementList() {
 
 function CelebrationHome() {
   return <>
-    <section className="celebration-hero" aria-labelledby="home-title">
-      <div><p className="eyebrow">不吱岛 · BIRTHDAY CELEBRATION</p><h1 id="home-title">菜菜岛主的<br />生日庆典</h1><p className="hero-description">海风捎来一封邀请函。<br />欢迎上岛，和菜菜、吱吱一起留下新的回忆。</p><div className="hero-actions"><a className="primary-link" href="#/office">去岛民事务所 →</a><a className="secondary-link" href="#/check-in">今日签到 ☀</a></div><span className="status-note">庆典筹备中 · 各项活动将陆续开放</span></div>
-      <div className="island-postcard" aria-label="不吱岛庆典邀请卡"><span className="postcard-stamp">不吱岛<br />邀请函</span><span className="postcard-bird" aria-hidden="true">啾</span><p>给每一位上岛的你</p><strong>今天的快乐，<br />也分你一份。</strong><span className="postcard-signature">菜菜 ＆ 吱吱</span></div>
+    <section className="celebration-hero hero-v2" aria-labelledby="home-title">
+      <div className="hero-ocean-halo" aria-hidden="true" />
+      <span className="hero-floating-spark spark-one" aria-hidden="true">✦</span>
+      <span className="hero-floating-spark spark-two" aria-hidden="true">✧</span>
+      <span className="hero-floating-spark spark-three" aria-hidden="true">✦</span>
+      <div className="hero-copy glass-panel">
+        <p className="eyebrow">WELCOME TO BUZHI ISLAND · 2026</p>
+        <span className="hero-mini-tag">✧ 菜菜生日特别企划 ✧</span>
+        <h1 id="home-title">🐭雾岛吱菜Gina 🐭<span>の诞生日！</span></h1>
+        <p className="hero-description">完成庆典任务领取金币，<br />收集与菜菜的生日回忆吧！</p>
+        <div className="hero-actions"><a className="primary-link" href="#/office">开启庆典旅程 ↗</a><a className="secondary-link" href="#/check-in">今日登岛 ✦</a></div>
+        <span className="status-note">✧ 菜菜是今天的主角 · 吱吱与你一起庆祝 ✧</span>
+      </div>
+      <div className="hero-poster" aria-label="双人主海报预留区：左侧吱吱，右侧菜菜">
+        <div className="poster-aurora" aria-hidden="true" />
+        <span className="poster-overline">OUR LITTLE ISLAND · BIRTHDAY MEMORY</span>
+        <div className="poster-characters">
+          <div className="poster-character poster-zhizhi"><span className="character-shimmer" aria-hidden="true">✧</span><span className="character-placeholder">吱吱<br /><small>共同岛主 · 海报立绘预留</small></span></div>
+          <div className="poster-character poster-caicai"><span className="character-shimmer" aria-hidden="true">✦</span><span className="character-placeholder">菜菜<br /><small>生日主角 · 海报立绘预留</small></span></div>
+        </div>
+        <div className="poster-bottom-glass"><span>CAICAI ♡ ZHIZHI</span><strong>不吱岛 · 生日庆典</strong><span>海风带来今天的祝福 ✧</span></div>
+      </div>
+      <a className="floating-stamp floating-checkin glass-panel" href="#/check-in"><span>☀</span><strong>登岛签到</strong><small>留下今日小脚印 ↗</small></a>
+      <a className="floating-stamp floating-letter glass-panel" href="#/mailbox"><span>✉</span><strong>岛主信箱</strong><small>查看岛上新消息 ↗</small></a>
+      <div className="hero-sea-floor" aria-hidden="true"><span>☁</span><span>✧</span><span>❋</span><span>✦</span></div>
     </section>
-    <section className="home-bulletin celebration-card" aria-labelledby="bulletin-title"><div className="section-heading"><h2 id="bulletin-title">岛上公告</h2><a href="#/mailbox">查看岛主信箱 →</a></div><AnnouncementList /></section>
-    <section aria-labelledby="destinations-title"><div className="section-heading"><div><p className="eyebrow">YOUR ISLAND DIARY</p><h2 id="destinations-title">今天，想去哪里逛逛？</h2></div><span className="muted">把快乐写进手账里</span></div><div className="destination-grid">{activityPages.slice(1, 5).map((page, index) => <a className="destination-card" key={page.path} href={`#${page.path}`}><span className="destination-number">0{index + 1}</span><span className="destination-icon" aria-hidden="true">{page.icon}</span><h3>{page.title}</h3><p>{page.description}</p><span className="destination-arrow" aria-hidden="true">↗</span></a>)}</div></section>
+    <section className="home-bulletin celebration-card glass-panel" aria-labelledby="bulletin-title"><div className="section-heading"><h2 id="bulletin-title">✉ 岛上最新来信</h2><a href="#/mailbox">前往岛主信箱 →</a></div><AnnouncementList /></section>
+    <section aria-labelledby="destinations-title" className="home-destinations"><div className="section-heading"><div><p className="eyebrow">EXPLORE YOUR BIRTHDAY ISLAND</p><h2 id="destinations-title">岛上的奇妙旅程 ✦</h2></div><span className="muted">每一站，都是值得收藏的回忆</span></div><div className="destination-grid">{activityPages.slice(1, 5).map((page, index) => <a className="destination-card glass-panel" key={page.path} href={`#${page.path}`}><span className="destination-number">0{index + 1}</span><span className="destination-icon" aria-hidden="true">{page.icon}</span><h3>{page.title}</h3><p>{page.description}</p><span className="destination-arrow" aria-hidden="true">↗</span></a>)}</div></section>
   </>;
 }
 
