@@ -73,6 +73,25 @@ function ActivityPage({ path }: { path: string }) {
 export default function App() {
   const [path, setPath] = useState(readPath);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [waterMotion, setWaterMotion] = useState(() => {
+    try { return window.localStorage.getItem('buzhi-water-motion') !== 'off'; }
+    catch { return true; }
+  });
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false);
+  useEffect(() => {
+    const preference = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    if (!preference) return;
+    const onChange = () => setReducedMotion(preference.matches);
+    onChange();
+    preference.addEventListener('change', onChange);
+    return () => preference.removeEventListener('change', onChange);
+  }, []);
+  const toggleWaterMotion = () => {
+    const next = !waterMotion;
+    setWaterMotion(next);
+    try { window.localStorage.setItem('buzhi-water-motion', next ? 'on' : 'off'); }
+    catch { /* The switch still works when browser storage is unavailable. */ }
+  };
   const [editorVisited, setEditorVisited] = useState(path === '/editor');
   const mainRef = useRef<HTMLElement>(null);
   const previousPath = useRef(path);
@@ -87,7 +106,8 @@ export default function App() {
     document.title = `${isEditor ? '排版工作台' : activityPages.find((page) => page.path === path)?.title ?? '页面未找到'} · 不吱岛生日庆典`;
     if (previousPath.current !== path) { mainRef.current?.focus(); previousPath.current = path; }
   }, [path, isEditor]);
-  return <div className="celebration-app">
+  return <div className="celebration-app" data-water-motion={waterMotion && !reducedMotion && !isEditor ? 'on' : 'off'}>
+    <div className="ocean-light" aria-hidden="true" />
     <a className="skip-link" href="#celebration-content" onClick={(event) => { event.preventDefault(); mainRef.current?.focus(); }}>跳到页面内容</a>
     <header className="celebration-header"><a className="island-brand" href="#/" aria-label="不吱岛，返回庆典码头"><span className="brand-mark" aria-hidden="true">啾</span><span><strong>不吱岛</strong><small>菜菜岛主生日庆典</small></span></a><button className="navigation-toggle" aria-expanded={menuOpen} aria-controls="celebration-navigation" onClick={() => setMenuOpen((open) => !open)}>{menuOpen ? '收起导航 ×' : '岛上导航 ☰'}</button><nav id="celebration-navigation" className={menuOpen ? 'celebration-nav is-open' : 'celebration-nav'} aria-label="庆典页面">{activityPages.map((page) => <a key={page.path} href={`#${page.path}`} aria-current={path === page.path ? 'page' : undefined} onClick={() => setMenuOpen(false)}><span aria-hidden="true">{page.icon}</span>{page.title}</a>)}</nav></header>
     <main id="celebration-content" ref={mainRef} tabIndex={-1} className={isEditor ? 'editor-content' : 'celebration-content'}>
@@ -95,6 +115,6 @@ export default function App() {
       {/* Keep the editor mounted after first use so navigation preserves undo history and pending saves. */}
       {(isEditor || editorVisited) && <div hidden={!isEditor}><h1 className="editor-page-title">排版工作台</h1><LayoutEditor /></div>}
     </main>
-    <footer className="celebration-footer"><span>不吱岛 · 菜菜 ＆ 吱吱<br /><small>一起收藏平凡日子里的小小快乐。</small></span><a href="#/editor" aria-current={isEditor ? 'page' : undefined}>排版工作台 ↗</a></footer>
+    <footer className="celebration-footer"><span>不吱岛 · 菜菜 ＆ 吱吱<br /><small>一起收藏平凡日子里的小小快乐。</small></span><button className="water-motion-toggle" type="button" aria-label="水波动态" aria-pressed={waterMotion && !reducedMotion} disabled={reducedMotion} onClick={toggleWaterMotion}>{reducedMotion ? '水波动态：随系统关闭' : `水波动态：${waterMotion ? '开' : '关'}`}</button><a href="#/editor" aria-current={isEditor ? 'page' : undefined}>排版工作台 ↗</a></footer>
   </div>;
 }

@@ -1,19 +1,20 @@
 // @vitest-environment jsdom
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { afterEach, beforeEach, expect, it } from 'vitest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import App from './App';
 
 let host: HTMLDivElement;
 let root: Root;
 beforeEach(() => {
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  window.localStorage.clear();
   window.history.replaceState(null, '', '/');
   host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
 });
-afterEach(async () => { await act(async () => root.unmount()); host.remove(); });
+afterEach(async () => { await act(async () => root.unmount()); host.remove(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 const render = async () => { await act(async () => root.render(<App />)); };
 const navigate = async (hash: string) => {
   await act(async () => {
@@ -65,4 +66,47 @@ it('opens every activity destination from its URL', async () => {
     expect(document.title).toContain(title);
     expect(document.activeElement).toBe(host.querySelector('main'));
   }
+});
+
+
+it('remembers the water motion choice across navigation and remounts', async () => {
+  await render();
+  const toggle = host.querySelector<HTMLButtonElement>('[aria-label="水波动态"]')!;
+  expect(toggle).not.toBeNull();
+  expect(toggle.getAttribute('aria-pressed')).toBe('true');
+  await act(async () => toggle.click());
+  expect(toggle.getAttribute('aria-pressed')).toBe('false');
+  expect(host.querySelector('.celebration-app')?.getAttribute('data-water-motion')).toBe('off');
+  await navigate('#/office');
+  expect(toggle.getAttribute('aria-pressed')).toBe('false');
+  await act(async () => root.unmount());
+  root = createRoot(host);
+  await render();
+  expect(host.querySelector('[aria-label="水波动态"]')?.getAttribute('aria-pressed')).toBe('false');
+});
+
+
+it('follows live reduced-motion changes without overwriting the saved choice', async () => {
+  const preference = Object.assign(new EventTarget(), { matches: true });
+  vi.stubGlobal('matchMedia', () => preference);
+  await render();
+  const toggle = host.querySelector<HTMLButtonElement>('[aria-label="水波动态"]')!;
+  expect(toggle.disabled).toBe(true);
+  expect(host.querySelector('.celebration-app')?.getAttribute('data-water-motion')).toBe('off');
+  await act(async () => {
+    preference.matches = false;
+    preference.dispatchEvent(new Event('change'));
+  });
+  expect(toggle.disabled).toBe(false);
+  expect(toggle.getAttribute('aria-pressed')).toBe('true');
+  expect(host.querySelector('.celebration-app')?.getAttribute('data-water-motion')).toBe('on');
+});
+
+it('keeps the motion switch usable when browser storage is blocked', async () => {
+  vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked'); });
+  vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('blocked'); });
+  await render();
+  const toggle = host.querySelector<HTMLButtonElement>('[aria-label="水波动态"]')!;
+  await act(async () => toggle.click());
+  expect(toggle.getAttribute('aria-pressed')).toBe('false');
 });
